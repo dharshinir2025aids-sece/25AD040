@@ -2,6 +2,7 @@ package com.renteasy.renteasy.controller;
 
 import com.renteasy.renteasy.models.Tenant;
 import com.renteasy.renteasy.service.TenantService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +18,12 @@ public class TenantController {
     }
 
     @PostMapping
-    public Tenant addTenant(@RequestBody Tenant tenant) {
-        return tenantService.addTenant(tenant);
+    public ResponseEntity<?> addTenant(@RequestBody Tenant tenant) {
+        try {
+            return ResponseEntity.ok(tenantService.addTenant(tenant));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
