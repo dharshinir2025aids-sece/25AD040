@@ -32,13 +32,17 @@ public class RentPaymentService {
     }
 
     public List<RentPayment> getPendingPayments(Long tenantId) {
-        return rentPaymentRepository.findByTenantIdAndStatus(tenantId, "PENDING");
+        return rentPaymentRepository.findByTenantIdAndStatus(
+                tenantId, "PENDING"
+        );
     }
 
     public double getPendingDues(Long tenantId) {
 
         List<RentPayment> pendingPayments =
-                rentPaymentRepository.findByTenantIdAndStatus(tenantId, "PENDING");
+                rentPaymentRepository.findByTenantIdAndStatus(
+                        tenantId, "PENDING"
+                );
 
         double total = 0;
 
@@ -50,6 +54,39 @@ public class RentPaymentService {
     }
 
     public List<RentPayment> getCurrentMonthUnpaid(String month) {
-        return rentPaymentRepository.findByMonthAndStatus(month, "PENDING");
+        return rentPaymentRepository.findByMonthAndStatus(
+                month, "PENDING"
+        );
+    }
+
+    public RentPayment updatePayment(
+            Long id,
+            RentPayment updatedPayment) {
+
+        RentPayment existingPayment =
+                rentPaymentRepository.findById(id).orElse(null);
+
+        if (existingPayment == null) {
+            throw new IllegalArgumentException("Payment not found");
+        }
+
+        existingPayment.setTenantId(updatedPayment.getTenantId());
+        existingPayment.setMonth(updatedPayment.getMonth());
+        existingPayment.setAmount(updatedPayment.getAmount());
+        existingPayment.setStatus(updatedPayment.getStatus());
+
+        return rentPaymentRepository.save(existingPayment);
+    }
+
+    public void deletePayment(Long id) {
+
+        RentPayment payment =
+                rentPaymentRepository.findById(id).orElse(null);
+
+        if (payment == null) {
+            throw new IllegalArgumentException("Payment not found");
+        }
+
+        rentPaymentRepository.delete(payment);
     }
 }

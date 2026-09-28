@@ -33,8 +33,50 @@ public class RentPaymentController {
     }
 
     @GetMapping("/{id}")
-    public RentPayment getPaymentById(@PathVariable Long id) {
-        return rentPaymentService.getPaymentById(id);
+    public ResponseEntity<?> getPaymentById(
+            @PathVariable Long id) {
+
+        RentPayment payment =
+                rentPaymentService.getPaymentById(id);
+
+        if (payment == null) {
+            return ResponseEntity.badRequest()
+                    .body("Payment not found");
+        }
+
+        return ResponseEntity.ok(payment);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePayment(
+            @PathVariable Long id,
+            @Valid @RequestBody RentPayment payment) {
+
+        try {
+            return ResponseEntity.ok(
+                    rentPaymentService.updatePayment(id, payment)
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePayment(
+            @PathVariable Long id) {
+
+        try {
+            rentPaymentService.deletePayment(id);
+
+            return ResponseEntity.ok(
+                    "Payment deleted successfully"
+            );
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @GetMapping("/tenant/{tenantId}")

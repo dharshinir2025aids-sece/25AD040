@@ -19,11 +19,16 @@ public class TenantController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addTenant(@Valid @RequestBody Tenant tenant) {
+    public ResponseEntity<?> addTenant(
+            @Valid @RequestBody Tenant tenant) {
+
         try {
-            return ResponseEntity.ok(tenantService.addTenant(tenant));
+            return ResponseEntity.ok(
+                    tenantService.addTenant(tenant)
+            );
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
         }
     }
 
@@ -33,16 +38,62 @@ public class TenantController {
     }
 
     @GetMapping("/{id}")
-    public Tenant getTenantById(@PathVariable Long id) {
-        return tenantService.getTenantById(id);
+    public ResponseEntity<?> getTenantById(
+            @PathVariable Long id) {
+
+        Tenant tenant = tenantService.getTenantById(id);
+
+        if (tenant == null) {
+            return ResponseEntity.badRequest()
+                    .body("Tenant not found");
+        }
+
+        return ResponseEntity.ok(tenant);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTenant(
+            @PathVariable Long id,
+            @Valid @RequestBody Tenant tenant) {
+
+        try {
+            return ResponseEntity.ok(
+                    tenantService.updateTenant(id, tenant)
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}/vacate")
-    public ResponseEntity<?> vacateTenant(@PathVariable Long id) {
+    public ResponseEntity<?> vacateTenant(
+            @PathVariable Long id) {
+
         try {
-            return ResponseEntity.ok(tenantService.vacateTenant(id));
+            return ResponseEntity.ok(
+                    tenantService.vacateTenant(id)
+            );
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTenant(
+            @PathVariable Long id) {
+
+        try {
+            tenantService.deleteTenant(id);
+
+            return ResponseEntity.ok(
+                    "Tenant deleted successfully"
+            );
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
         }
     }
 }

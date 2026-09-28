@@ -29,7 +29,39 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public Room getRoomById(@PathVariable Long id) {
-        return roomService.getRoomById(id);
+    public ResponseEntity<?> getRoomById(@PathVariable Long id) {
+
+        Room room = roomService.getRoomById(id);
+
+        if (room == null) {
+            return ResponseEntity.badRequest().body("Room not found");
+        }
+
+        return ResponseEntity.ok(room);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateRoom(
+            @PathVariable Long id,
+            @Valid @RequestBody Room room) {
+
+        try {
+            return ResponseEntity.ok(
+                    roomService.updateRoom(id, room)
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRoom(@PathVariable Long id) {
+
+        try {
+            roomService.deleteRoom(id);
+            return ResponseEntity.ok("Room deleted successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

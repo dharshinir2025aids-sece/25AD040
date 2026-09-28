@@ -48,6 +48,21 @@ public class TenantService {
         return tenantRepository.findById(id).orElse(null);
     }
 
+    public Tenant updateTenant(Long id, Tenant updatedTenant) {
+
+        Tenant existingTenant = tenantRepository.findById(id).orElse(null);
+
+        if (existingTenant == null) {
+            throw new IllegalArgumentException("Tenant not found");
+        }
+
+        existingTenant.setName(updatedTenant.getName());
+        existingTenant.setPhone(updatedTenant.getPhone());
+        existingTenant.setEmail(updatedTenant.getEmail());
+
+        return tenantRepository.save(existingTenant);
+    }
+
     public String vacateTenant(Long id) {
 
         Tenant tenant = tenantRepository.findById(id).orElse(null);
@@ -71,5 +86,22 @@ public class TenantService {
         tenantRepository.save(tenant);
 
         return "Tenant vacated and room is now available";
+    }
+
+    public void deleteTenant(Long id) {
+
+        Tenant tenant = tenantRepository.findById(id).orElse(null);
+
+        if (tenant == null) {
+            throw new IllegalArgumentException("Tenant not found");
+        }
+
+        if (tenant.isActive()) {
+            throw new IllegalArgumentException(
+                    "Cannot delete an active tenant. Vacate the tenant first"
+            );
+        }
+
+        tenantRepository.delete(tenant);
     }
 }
