@@ -47,4 +47,29 @@ public class TenantService {
     public Tenant getTenantById(Long id) {
         return tenantRepository.findById(id).orElse(null);
     }
+
+    public String vacateTenant(Long id) {
+
+        Tenant tenant = tenantRepository.findById(id).orElse(null);
+
+        if (tenant == null) {
+            throw new IllegalArgumentException("Tenant not found");
+        }
+
+        if (!tenant.isActive()) {
+            throw new IllegalArgumentException("Tenant is already inactive");
+        }
+
+        Room room = roomRepository.findById(tenant.getRoomId()).orElse(null);
+
+        if (room != null) {
+            room.setStatus("AVAILABLE");
+            roomRepository.save(room);
+        }
+
+        tenant.setActive(false);
+        tenantRepository.save(tenant);
+
+        return "Tenant vacated and room is now available";
+    }
 }
