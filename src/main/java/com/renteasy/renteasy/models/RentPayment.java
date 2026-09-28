@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class RentPayment {
@@ -12,12 +15,16 @@ public class RentPayment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Tenant ID is required")
     private Long tenantId;
 
+    @NotBlank(message = "Month is required")
     private String month;
 
+    @Positive(message = "Amount must be greater than 0")
     private double amount;
 
+    @NotBlank(message = "Payment status is required")
     private String status;
 
     public Long getId() {

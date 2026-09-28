@@ -2,6 +2,7 @@ package com.renteasy.renteasy.controller;
 
 import com.renteasy.renteasy.models.RentPayment;
 import com.renteasy.renteasy.service.RentPaymentService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +19,12 @@ public class RentPaymentController {
     }
 
     @PostMapping
-    public RentPayment addPayment(@RequestBody RentPayment payment) {
-        return rentPaymentService.addPayment(payment);
+    public ResponseEntity<?> addPayment(
+            @Valid @RequestBody RentPayment payment) {
+
+        return ResponseEntity.ok(
+                rentPaymentService.addPayment(payment)
+        );
     }
 
     @GetMapping
@@ -33,21 +38,27 @@ public class RentPaymentController {
     }
 
     @GetMapping("/tenant/{tenantId}")
-    public ResponseEntity<?> getPaymentsByTenant(@PathVariable Long tenantId) {
+    public ResponseEntity<?> getPaymentsByTenant(
+            @PathVariable Long tenantId) {
+
         return ResponseEntity.ok(
                 rentPaymentService.getPaymentsByTenant(tenantId)
         );
     }
 
     @GetMapping("/tenant/{tenantId}/pending")
-    public ResponseEntity<?> getPendingPayments(@PathVariable Long tenantId) {
+    public ResponseEntity<?> getPendingPayments(
+            @PathVariable Long tenantId) {
+
         return ResponseEntity.ok(
                 rentPaymentService.getPendingPayments(tenantId)
         );
     }
 
     @GetMapping("/tenant/{tenantId}/dues")
-    public ResponseEntity<?> getPendingDues(@PathVariable Long tenantId) {
+    public ResponseEntity<?> getPendingDues(
+            @PathVariable Long tenantId) {
+
         return ResponseEntity.ok(
                 rentPaymentService.getPendingDues(tenantId)
         );
