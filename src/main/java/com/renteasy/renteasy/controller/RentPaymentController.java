@@ -52,4 +52,13 @@ public class RentPaymentController {
                 rentPaymentService.getPendingDues(tenantId)
         );
     }
+
+    @GetMapping("/unpaid")
+    public ResponseEntity<?> getCurrentMonthUnpaid(
+            @RequestParam String month) {
+
+        return ResponseEntity.ok(
+                rentPaymentService.getCurrentMonthUnpaid(month)
+        );
+    }
 }

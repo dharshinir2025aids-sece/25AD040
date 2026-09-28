@@ -10,4 +10,6 @@ public interface RentPaymentRepository extends JpaRepository<RentPayment, Long> 
     List<RentPayment> findByTenantId(Long tenantId);
 
     List<RentPayment> findByTenantIdAndStatus(Long tenantId, String status);
+
+    List<RentPayment> findByMonthAndStatus(String month, String status);
 }

@@ -48,4 +48,8 @@ public class RentPaymentService {
 
         return total;
     }
+
+    public List<RentPayment> getCurrentMonthUnpaid(String month) {
+        return rentPaymentRepository.findByMonthAndStatus(month, "PENDING");
+    }
 }
