@@ -26,4 +26,26 @@ public class RentPaymentService {
     public RentPayment getPaymentById(Long id) {
         return rentPaymentRepository.findById(id).orElse(null);
     }
+
+    public List<RentPayment> getPaymentsByTenant(Long tenantId) {
+        return rentPaymentRepository.findByTenantId(tenantId);
+    }
+
+    public List<RentPayment> getPendingPayments(Long tenantId) {
+        return rentPaymentRepository.findByTenantIdAndStatus(tenantId, "PENDING");
+    }
+
+    public double getPendingDues(Long tenantId) {
+
+        List<RentPayment> pendingPayments =
+                rentPaymentRepository.findByTenantIdAndStatus(tenantId, "PENDING");
+
+        double total = 0;
+
+        for (RentPayment payment : pendingPayments) {
+            total = total + payment.getAmount();
+        }
+
+        return total;
+    }
 }

@@ -2,6 +2,7 @@ package com.renteasy.renteasy.controller;
 
 import com.renteasy.renteasy.models.RentPayment;
 import com.renteasy.renteasy.service.RentPaymentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,5 +30,26 @@ public class RentPaymentController {
     @GetMapping("/{id}")
     public RentPayment getPaymentById(@PathVariable Long id) {
         return rentPaymentService.getPaymentById(id);
+    }
+
+    @GetMapping("/tenant/{tenantId}")
+    public ResponseEntity<?> getPaymentsByTenant(@PathVariable Long tenantId) {
+        return ResponseEntity.ok(
+                rentPaymentService.getPaymentsByTenant(tenantId)
+        );
+    }
+
+    @GetMapping("/tenant/{tenantId}/pending")
+    public ResponseEntity<?> getPendingPayments(@PathVariable Long tenantId) {
+        return ResponseEntity.ok(
+                rentPaymentService.getPendingPayments(tenantId)
+        );
+    }
+
+    @GetMapping("/tenant/{tenantId}/dues")
+    public ResponseEntity<?> getPendingDues(@PathVariable Long tenantId) {
+        return ResponseEntity.ok(
+                rentPaymentService.getPendingDues(tenantId)
+        );
     }
 }
