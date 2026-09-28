@@ -35,4 +35,13 @@ public class TenantController {
     public Tenant getTenantById(@PathVariable Long id) {
         return tenantService.getTenantById(id);
     }
+
+    @PutMapping("/{id}/vacate")
+    public ResponseEntity<?> vacateTenant(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(tenantService.vacateTenant(id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
