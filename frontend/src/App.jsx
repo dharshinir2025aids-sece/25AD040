@@ -152,7 +152,7 @@ function App() {
 
                     <div className="payment">
                       <div>
-                        <strong>Arun Kumar</strong>
+                        <strong>priya</strong>
                         <small>September 2026</small>
                       </div>
                       <div className="payment-right">
@@ -227,7 +227,7 @@ function App() {
                   </div>
 
                   <div className="table-row">
-                    <span>Arun Kumar</span>
+                    <span>priya</span>
                     <span>9876543211</span>
                     <span>102</span>
                   </div>
@@ -261,7 +261,7 @@ function App() {
                   </div>
 
                   <div className="table-row">
-                    <span>Arun Kumar</span>
+                    <span>priya</span>
                     <span>September 2026</span>
                     <span>₹8,000</span>
                     <span className="status pending-status">PENDING</span>
