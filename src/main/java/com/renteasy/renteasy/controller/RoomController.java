@@ -10,6 +10,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/rooms")
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175"
+})
 public class RoomController {
 
     private final RoomService roomService;
@@ -19,49 +24,49 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addRoom(@Valid @RequestBody Room room) {
-        return ResponseEntity.ok(roomService.addRoom(room));
+    public ResponseEntity<Room> addRoom(
+            @Valid @RequestBody Room room) {
+
+        return ResponseEntity.ok(
+                roomService.addRoom(room)
+        );
     }
 
     @GetMapping
-    public List<Room> getAllRooms() {
-        return roomService.getAllRooms();
+    public ResponseEntity<List<Room>> getAllRooms() {
+
+        return ResponseEntity.ok(
+                roomService.getAllRooms()
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getRoomById(@PathVariable Long id) {
+    public ResponseEntity<Room> getRoomById(
+            @PathVariable Long id) {
 
-        Room room = roomService.getRoomById(id);
-
-        if (room == null) {
-            return ResponseEntity.badRequest().body("Room not found");
-        }
-
-        return ResponseEntity.ok(room);
+        return ResponseEntity.ok(
+                roomService.getRoomById(id)
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRoom(
+    public ResponseEntity<Room> updateRoom(
             @PathVariable Long id,
             @Valid @RequestBody Room room) {
 
-        try {
-            return ResponseEntity.ok(
-                    roomService.updateRoom(id, room)
-            );
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return ResponseEntity.ok(
+                roomService.updateRoom(id, room)
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRoom(@PathVariable Long id) {
+    public ResponseEntity<String> deleteRoom(
+            @PathVariable Long id) {
 
-        try {
-            roomService.deleteRoom(id);
-            return ResponseEntity.ok("Room deleted successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        roomService.deleteRoom(id);
+
+        return ResponseEntity.ok(
+                "Room deleted successfully"
+        );
     }
 }

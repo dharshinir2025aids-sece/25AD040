@@ -10,16 +10,23 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/rent-payments")
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175"
+})
 public class RentPaymentController {
 
     private final RentPaymentService rentPaymentService;
 
-    public RentPaymentController(RentPaymentService rentPaymentService) {
+    public RentPaymentController(
+            RentPaymentService rentPaymentService) {
+
         this.rentPaymentService = rentPaymentService;
     }
 
     @PostMapping
-    public ResponseEntity<?> addPayment(
+    public ResponseEntity<RentPayment> addPayment(
             @Valid @RequestBody RentPayment payment) {
 
         return ResponseEntity.ok(
@@ -28,59 +35,45 @@ public class RentPaymentController {
     }
 
     @GetMapping
-    public List<RentPayment> getAllPayments() {
-        return rentPaymentService.getAllPayments();
+    public ResponseEntity<List<RentPayment>> getAllPayments() {
+
+        return ResponseEntity.ok(
+                rentPaymentService.getAllPayments()
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPaymentById(
+    public ResponseEntity<RentPayment> getPaymentById(
             @PathVariable Long id) {
 
-        RentPayment payment =
-                rentPaymentService.getPaymentById(id);
-
-        if (payment == null) {
-            return ResponseEntity.badRequest()
-                    .body("Payment not found");
-        }
-
-        return ResponseEntity.ok(payment);
+        return ResponseEntity.ok(
+                rentPaymentService.getPaymentById(id)
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePayment(
+    public ResponseEntity<RentPayment> updatePayment(
             @PathVariable Long id,
             @Valid @RequestBody RentPayment payment) {
 
-        try {
-            return ResponseEntity.ok(
-                    rentPaymentService.updatePayment(id, payment)
-            );
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(e.getMessage());
-        }
+        return ResponseEntity.ok(
+                rentPaymentService.updatePayment(id, payment)
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePayment(
+    public ResponseEntity<String> deletePayment(
             @PathVariable Long id) {
 
-        try {
-            rentPaymentService.deletePayment(id);
+        rentPaymentService.deletePayment(id);
 
-            return ResponseEntity.ok(
-                    "Payment deleted successfully"
-            );
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(e.getMessage());
-        }
+        return ResponseEntity.ok(
+                "Payment deleted successfully"
+        );
     }
 
     @GetMapping("/tenant/{tenantId}")
-    public ResponseEntity<?> getPaymentsByTenant(
+    public ResponseEntity<List<RentPayment>> getPaymentsByTenant(
             @PathVariable Long tenantId) {
 
         return ResponseEntity.ok(
@@ -89,7 +82,7 @@ public class RentPaymentController {
     }
 
     @GetMapping("/tenant/{tenantId}/pending")
-    public ResponseEntity<?> getPendingPayments(
+    public ResponseEntity<List<RentPayment>> getPendingPayments(
             @PathVariable Long tenantId) {
 
         return ResponseEntity.ok(
@@ -98,7 +91,7 @@ public class RentPaymentController {
     }
 
     @GetMapping("/tenant/{tenantId}/dues")
-    public ResponseEntity<?> getPendingDues(
+    public ResponseEntity<Double> getPendingDues(
             @PathVariable Long tenantId) {
 
         return ResponseEntity.ok(
@@ -107,7 +100,7 @@ public class RentPaymentController {
     }
 
     @GetMapping("/unpaid")
-    public ResponseEntity<?> getCurrentMonthUnpaid(
+    public ResponseEntity<List<RentPayment>> getCurrentMonthUnpaid(
             @RequestParam String month) {
 
         return ResponseEntity.ok(

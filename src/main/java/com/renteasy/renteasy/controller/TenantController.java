@@ -10,6 +10,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tenants")
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175"
+})
 public class TenantController {
 
     private final TenantService tenantService;
@@ -19,81 +24,60 @@ public class TenantController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addTenant(
+    public ResponseEntity<Tenant> addTenant(
             @Valid @RequestBody Tenant tenant) {
 
-        try {
-            return ResponseEntity.ok(
-                    tenantService.addTenant(tenant)
-            );
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(e.getMessage());
-        }
+        return ResponseEntity.ok(
+                tenantService.addTenant(tenant)
+        );
     }
 
     @GetMapping
-    public List<Tenant> getAllTenants() {
-        return tenantService.getAllTenants();
+    public ResponseEntity<List<Tenant>> getAllTenants() {
+
+        return ResponseEntity.ok(
+                tenantService.getAllTenants()
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTenantById(
+    public ResponseEntity<Tenant> getTenantById(
             @PathVariable Long id) {
 
-        Tenant tenant = tenantService.getTenantById(id);
-
-        if (tenant == null) {
-            return ResponseEntity.badRequest()
-                    .body("Tenant not found");
-        }
-
-        return ResponseEntity.ok(tenant);
+        return ResponseEntity.ok(
+                tenantService.getTenantById(id)
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTenant(
+    public ResponseEntity<Tenant> updateTenant(
             @PathVariable Long id,
             @Valid @RequestBody Tenant tenant) {
 
-        try {
-            return ResponseEntity.ok(
-                    tenantService.updateTenant(id, tenant)
-            );
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(e.getMessage());
-        }
+        return ResponseEntity.ok(
+                tenantService.updateTenant(id, tenant)
+        );
     }
 
     @PutMapping("/{id}/vacate")
-    public ResponseEntity<?> vacateTenant(
+    public ResponseEntity<String> vacateTenant(
             @PathVariable Long id) {
 
-        try {
-            return ResponseEntity.ok(
-                    tenantService.vacateTenant(id)
-            );
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(e.getMessage());
-        }
+        tenantService.vacateTenant(id);
+
+        return ResponseEntity.ok(
+                "Tenant vacated and room is now available"
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTenant(
+    public ResponseEntity<String> deleteTenant(
             @PathVariable Long id) {
 
-        try {
-            tenantService.deleteTenant(id);
+        tenantService.deleteTenant(id);
 
-            return ResponseEntity.ok(
-                    "Tenant deleted successfully"
-            );
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(e.getMessage());
-        }
+        return ResponseEntity.ok(
+                "Tenant deleted successfully"
+        );
     }
 }
